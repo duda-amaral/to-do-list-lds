@@ -1,10 +1,7 @@
 package com.labdessoft.todolist.entity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,10 +22,6 @@ public class Task {
     @Size(min = 10, message = "Descrição da tarefa deve possuir pelo menos 10 caracteres")
     private String description;
     private  Boolean completed;
-
-    public Task(String description) {
-        this.description = description;
-    }
 
     @Override
     public String toString() {

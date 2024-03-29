@@ -20,7 +20,7 @@ public class TaskController {
     @Autowired
     private TaskService taskService;
     @GetMapping
-    @Operation(description = "Lista todas as tarefas cadastradas")
+    @Operation(summary = "Lista todas as tarefas cadastradas")
     public ResponseEntity<List<Task>> listAll() {
         try{
             List<Task> taskList = this.taskService.listAll();
@@ -35,7 +35,7 @@ public class TaskController {
     }
 
     @PostMapping
-    @Operation(description = "Cadastra as tarefas")
+    @Operation(summary = "Cadastra as tarefas")
     public ResponseEntity<Task> create(@Valid @RequestBody Task obj) {
         this.taskService.create(obj);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -43,7 +43,7 @@ public class TaskController {
         return ResponseEntity.created(uri).build();
     }
 
-    @Operation(description = "Atualiza uma tarefa")
+    @Operation(summary = "Atualiza a descrição de uma tarefa")
     @PutMapping("/{id}")
     public ResponseEntity<Task> update(@Valid @RequestBody Task obj, @PathVariable Long id) {
         obj.setId(id);
@@ -51,7 +51,7 @@ public class TaskController {
         return ResponseEntity.noContent().build();
     }
 
-    @Operation(description = "Atualiza o status de uma tarefa")
+    @Operation(summary = "Atualiza o status de uma tarefa")
     @PutMapping("/{id}/completed")
     public ResponseEntity<Task> updateStatus(@Valid @RequestBody Task obj, @PathVariable Long id) {
         obj.setId(id);
@@ -60,7 +60,7 @@ public class TaskController {
         return ResponseEntity.noContent().build();
     }
 
-    @Operation(description = "Deleta uma tarefa")
+    @Operation(summary = "Deleta uma tarefa pelo id")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         this.taskService.delete(id);

@@ -34,7 +34,7 @@ public class TaskService {
         return obj;
     }
 
-    @Operation(description = "atualiza uma tarefa especificada pelo id")
+    @Operation(description = "atualiza a descrição de uma tarefa especificada pelo id")
     public Task update(Task obj)  {
         Task newObj = findById(obj.getId());
         BeanUtils.copyProperties(obj, newObj, "id", "completed");
