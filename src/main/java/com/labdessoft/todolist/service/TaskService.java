@@ -1,7 +1,6 @@
 package com.labdessoft.todolist.service;
 
 import com.labdessoft.todolist.entity.Task;
-import com.labdessoft.todolist.enums.TaskTipo;
 import com.labdessoft.todolist.repository.TaskRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.transaction.Transactional;
@@ -9,7 +8,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -38,7 +36,6 @@ public class TaskService {
 
     @Operation(description = "atualiza a descrição de uma tarefa especificada pelo id")
     public Task update(Task obj)  {
-        validateTask(obj);
         Task newObj = findById(obj.getId());
         BeanUtils.copyProperties(obj, newObj, "id", "completed");
         return this.taskRepository.save(newObj);
@@ -55,11 +52,5 @@ public class TaskService {
     public void delete(Long id) {
         Task task = findById(id);
         this.taskRepository.delete(task);
-    }
-
-    private void validateTask(Task task) {
-        if (task.getType() == TaskTipo.DATA && task.getDueDate().isBefore(LocalDate.now())) {
-            throw new RuntimeException("A data prevista de execução deve ser igual ou superior à data atual.");
-        }
     }
 }
