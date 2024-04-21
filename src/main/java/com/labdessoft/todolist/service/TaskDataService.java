@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
@@ -32,7 +33,11 @@ public class TaskDataService {
     public TaskData create(TaskData obj) {
         obj.setId(null);
         obj.setCompleted(false);
+
         obj = this.taskDataRepository.save(obj);
+
+        String status = getStatus(obj.getId());
+        obj.setStatus(status);
         return obj;
     }
 
@@ -40,13 +45,17 @@ public class TaskDataService {
     public TaskData update(TaskData obj)  {
         TaskData newObj = findById(obj.getId());
         BeanUtils.copyProperties(obj, newObj, "id", "completed");
+        String status = getStatus(obj.getId());
+        newObj.setStatus(status);
         return this.taskDataRepository.save(newObj);
     }
 
     @Operation(description = "atualiza o status de uma tarefa do tipo data")
     public TaskData updateStatus(TaskData obj)  {
         TaskData newObj = findById(obj.getId());
-        BeanUtils.copyProperties(obj, newObj, "id", "description");
+        BeanUtils.copyProperties(obj, newObj, "id", "description", "dueDate", "status");
+        String status = getStatus(obj.getId());
+        newObj.setStatus(status);
         return this.taskDataRepository.save(newObj);
     }
 
@@ -60,6 +69,23 @@ public class TaskDataService {
     private void validateTask(TaskData task) {
         if (task.getDueDate().isBefore(LocalDate.now())) {
             throw new RuntimeException("A data prevista de execução deve ser igual ou superior à data atual.");
+        }
+    }
+
+    @Operation(description = "Retorna o status de uma tarefa do tipo data especificada pelo id")
+    public String getStatus(Long id) {
+        TaskData task = findById(id);
+
+        LocalDate dueDate = task.getDueDate();
+        LocalDate currentDate = LocalDate.now();
+
+        if (task.getCompleted() == true) {
+            return "Concluída";
+        } else if (currentDate.isAfter(dueDate)) {
+            long daysLate = ChronoUnit.DAYS.between(dueDate, currentDate);
+            return daysLate + " dias de atraso";
+        } else {
+            return "Prevista: " + dueDate;
         }
     }
 }

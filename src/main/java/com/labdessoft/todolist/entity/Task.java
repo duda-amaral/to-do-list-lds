@@ -14,20 +14,21 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Schema(description = "Todos os detalhes de uma tarefa livre")
 public class Task {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.TABLE)
+    protected Long id;
 
     @Schema(name = "Descrição da tarefa deve possuir pelo menos 10 caracteres")
     @Size(min = 10, message = "Descrição da tarefa deve possuir pelo menos 10 caracteres")
-    private String description;
+    protected String description;
 
-    private  Boolean completed;
+    protected Boolean completed;
 
     @Enumerated(EnumType.STRING)
-    private Prioridade priority;
+    protected Prioridade priority;
 
     @Override
     public String toString() {
