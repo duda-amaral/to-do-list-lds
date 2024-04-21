@@ -30,7 +30,6 @@ public class TaskService {
     @Operation(description = "cadastra tarefas")
     @Transactional
     public Task create(Task obj) {
-        validateTask(obj);
         obj.setId(null);
         obj.setCompleted(false);
         obj = this.taskRepository.save(obj);
