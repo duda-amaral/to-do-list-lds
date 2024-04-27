@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Entity
 @Getter
 @Setter
@@ -19,4 +21,6 @@ import lombok.Setter;
 public class TaskPrazo extends Task {
     @Schema(description = "Prazo previsto de conclusão em dias")
     private Integer dueDays;
+
+    private LocalDate creationDate;
 }
