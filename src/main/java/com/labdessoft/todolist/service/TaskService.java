@@ -32,7 +32,11 @@ public class TaskService {
         obj.setId(null);
         obj.setCompleted(false);
         obj.setType(TaskTipo.LIVRE);
+
         obj = this.taskRepository.save(obj);
+
+        String status = getStatus(obj.getId());
+        obj.setStatus(status);
         return obj;
     }
 
@@ -40,6 +44,8 @@ public class TaskService {
     public Task update(Task obj)  {
         Task newObj = findById(obj.getId());
         BeanUtils.copyProperties(obj, newObj, "id", "completed", "type");
+        String status = getStatus(obj.getId());
+        newObj.setStatus(status);
         return this.taskRepository.save(newObj);
     }
 
@@ -47,6 +53,8 @@ public class TaskService {
     public Task updateStatus(Task obj)  {
         Task newObj = findById(obj.getId());
         BeanUtils.copyProperties(obj, newObj, "id", "description", "type");
+        String status = getStatus(obj.getId());
+        newObj.setStatus(status);
         return this.taskRepository.save(newObj);
     }
 
@@ -54,5 +62,15 @@ public class TaskService {
     public void delete(Long id) {
         Task task = findById(id);
         this.taskRepository.delete(task);
+    }
+
+    @Operation(description = "Retorna o status de uma tarefa especificada pelo id")
+    public String getStatus(Long id) {
+        Task task = findById(id);
+
+        if (task.getCompleted() == true) {
+            return "Concluída";
+        }
+      return "Pendente";
     }
 }

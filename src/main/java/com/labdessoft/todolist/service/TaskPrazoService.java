@@ -83,7 +83,7 @@ public class TaskPrazoService {
             long daysOverdue = ChronoUnit.DAYS.between(task.getCreationDate().plusDays(dueDays), currentDate);
             return daysOverdue + " dias de atraso";
         } else {
-            return "Prevista: " + dueDays;
+            return "Prevista: " + dueDays + " dias";
         }
     }
 }
