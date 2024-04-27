@@ -1,6 +1,7 @@
 package com.labdessoft.todolist.service;
 
 import com.labdessoft.todolist.entity.Task;
+import com.labdessoft.todolist.enums.TaskTipo;
 import com.labdessoft.todolist.repository.TaskRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.transaction.Transactional;
@@ -30,6 +31,7 @@ public class TaskService {
     public Task create(Task obj) {
         obj.setId(null);
         obj.setCompleted(false);
+        obj.setType(TaskTipo.LIVRE);
         obj = this.taskRepository.save(obj);
         return obj;
     }
@@ -37,14 +39,14 @@ public class TaskService {
     @Operation(description = "atualiza a descrição de uma tarefa especificada pelo id")
     public Task update(Task obj)  {
         Task newObj = findById(obj.getId());
-        BeanUtils.copyProperties(obj, newObj, "id", "completed");
+        BeanUtils.copyProperties(obj, newObj, "id", "completed", "type");
         return this.taskRepository.save(newObj);
     }
 
     @Operation(description = "atualiza o status de uma tarefa")
     public Task updateStatus(Task obj)  {
         Task newObj = findById(obj.getId());
-        BeanUtils.copyProperties(obj, newObj, "id", "description");
+        BeanUtils.copyProperties(obj, newObj, "id", "description", "type");
         return this.taskRepository.save(newObj);
     }
 
