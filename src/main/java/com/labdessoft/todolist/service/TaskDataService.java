@@ -12,6 +12,8 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+import static com.labdessoft.todolist.enums.TaskTipo.DATA;
+
 @Service
 public class TaskDataService {
 
@@ -33,6 +35,7 @@ public class TaskDataService {
     public TaskData create(TaskData obj) {
         obj.setId(null);
         obj.setCompleted(false);
+        obj.setType(DATA);
 
         obj = this.taskDataRepository.save(obj);
 
@@ -44,7 +47,7 @@ public class TaskDataService {
     @Operation(description = "atualiza a descrição de uma tarefa do tipo data especificada pelo id")
     public TaskData update(TaskData obj)  {
         TaskData newObj = findById(obj.getId());
-        BeanUtils.copyProperties(obj, newObj, "id", "completed");
+        BeanUtils.copyProperties(obj, newObj, "id", "completed", "type");
         String status = getStatus(obj.getId());
         newObj.setStatus(status);
         return this.taskDataRepository.save(newObj);
@@ -53,7 +56,7 @@ public class TaskDataService {
     @Operation(description = "atualiza o status de uma tarefa do tipo data")
     public TaskData updateStatus(TaskData obj)  {
         TaskData newObj = findById(obj.getId());
-        BeanUtils.copyProperties(obj, newObj, "id", "description", "dueDate", "status");
+        BeanUtils.copyProperties(obj, newObj, "id", "description", "dueDate", "status", "type");
         String status = getStatus(obj.getId());
         newObj.setStatus(status);
         return this.taskDataRepository.save(newObj);
@@ -66,7 +69,7 @@ public class TaskDataService {
 
     }
 
-    private void validateTask(TaskData task) {
+    private void validateDate(TaskData task) {
         if (task.getDueDate().isBefore(LocalDate.now())) {
             throw new RuntimeException("A data prevista de execução deve ser igual ou superior à data atual.");
         }

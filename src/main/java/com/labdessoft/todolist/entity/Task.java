@@ -1,6 +1,7 @@
 package com.labdessoft.todolist.entity;
 
 import com.labdessoft.todolist.enums.Prioridade;
+import com.labdessoft.todolist.enums.TaskTipo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
@@ -29,6 +30,11 @@ public class Task {
 
     @Enumerated(EnumType.STRING)
     protected Prioridade priority;
+
+    @Enumerated(EnumType.STRING)
+    protected TaskTipo type;
+
+    protected String status;
 
     @Override
     public String toString() {

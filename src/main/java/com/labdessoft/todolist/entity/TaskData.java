@@ -16,8 +16,9 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(description = "Todos os detalhes de uma tarefa do tipo data")
-@Table(name = "TASKDATA")
+@Table(name = "TASK_DATA")
 public class TaskData extends Task{
-    private LocalDate dueDate; // Data prevista de conclusão
-    private String status;
+
+    @Schema(description = "Data prevista de conclusão")
+    private LocalDate dueDate;
 }
