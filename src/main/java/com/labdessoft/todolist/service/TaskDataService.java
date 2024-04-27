@@ -81,6 +81,7 @@ public class TaskDataService {
 
         LocalDate dueDate = task.getDueDate();
         LocalDate currentDate = LocalDate.now();
+        validateDate(task);
 
         if (task.getCompleted() == true) {
             return "Concluída";
