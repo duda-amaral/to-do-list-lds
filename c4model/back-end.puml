@@ -1,0 +1,52 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+!define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons
+!define FONTAWESOME https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/font-awesome-5
+!include DEVICONS/angular.puml
+!include DEVICONS/java.puml
+!include DEVICONS/msql_server.puml
+!include FONTAWESOME/users.puml
+
+
+!$COLOR_B_3 = "#8073ac"
+!$COLOR_B_4 = "#542788"
+
+Person(user, "Usuário", "Usuários do sistema", $sprite="users")
+
+AddBoundaryTag("api", $bgColor="$COLOR_B_4", $fontColor="white", $borderColor="white", $shadowing="true", $shape = RoundedBoxShape())
+AddBoundaryTag("diretorio", $bgColor="$COLOR_B_3", $fontColor="white", $borderColor="white")
+
+Boundary(s1, "ToDo List API", "Java, Spring Boot", $tags="api") {
+
+   Boundary(E, "Entity", "Diretório", $tags="diretorio") {
+      Container(task, "Task.java", "class")
+      Container(taskD, "TaskData.java", "class")
+      Container(taskP, "TaskPrazo.java", "class")
+}
+
+   Boundary(R, "Repository", "Diretório", $tags="diretorio") {
+      Container(repo1, "TaskRepository.java", "interface")
+      Container(repo2, "TaskDataRepository.java", "interface")
+      Container(repo3, "TaskPrazoRepository.java", "interface")
+}
+
+   Boundary(S, "Service", "Diretório", $tags="diretorio") {
+      Container(serv1, "TaskService.java", "class")
+      Container(serv2, "TaskDataService.java", "class")
+      Container(serv3, "TaskPrazoService.java", "class")
+}
+
+   Boundary(C, "Controller", "Diretório", $tags="diretorio") {
+      Container(cont1, "TaskController.java", "class")
+      Container(cont2, "TaskDataController.java", "class")
+      Container(cont3, "TaskPrazoController.java", "class")
+}
+}
+ContainerDb(db, "Banco de dados", "H2", "Guarda informações das tarefas")
+
+Rel(user, s1, "Uses", "https")
+Rel_R(s1, db, "Reads/Writes")
+
+SHOW_LEGEND()
+@enduml
