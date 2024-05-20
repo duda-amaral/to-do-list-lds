@@ -21,7 +21,7 @@ import static org.hamcrest.Matchers.equalTo;
 public class TaskControllerIntegrationTest {
     @Before
     public void setup() {
-        RestAssured.baseURI = "https://to-do-list-lds.onrender.com";
+        RestAssured.baseURI = "https://localhost:8080";
         RestAssured.port = 8080;
     }
 
