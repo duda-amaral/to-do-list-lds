@@ -19,6 +19,14 @@ public class TaskController {
 
     @Autowired
     private TaskService taskService;
+
+    @GetMapping("/{id}")
+    @Operation(description = "Pesquisa uma tarefa pelo id")
+    public ResponseEntity<Task> getTaskById(@PathVariable Long id) {
+        Task task = taskService.findById(id);
+        return ResponseEntity.ok(task);
+    }
+
     @GetMapping
     @Operation(summary = "Lista todas as tarefas cadastradas")
     public ResponseEntity<List<Task>> listAll() {
