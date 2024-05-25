@@ -13,8 +13,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
 
-import static io.restassured.RestAssured.get;
+import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
+
 @ExtendWith(MockitoExtension.class)
 @RunWith(JUnitPlatform.class)
 @SpringBootTest(classes = {ToDoListApplication.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -31,8 +33,7 @@ public class TaskControllerIntegrationTest {
     }
 
     @Test
-    public void
-    givenUrl_whenSuccessOnGetsResponseAndJsonHasRequiredKV_thenCorrect() {
+    public void givenUrl_whenSuccessOnGetsResponseAndJsonHasRequiredKV_thenCorrect() {
         get("/api/task").then().statusCode(200);
     }
 
@@ -40,5 +41,42 @@ public class TaskControllerIntegrationTest {
     public void givenUrl_whenSuccessOnGetsResponseAndJsonHasOneTask_thenCorrect() {
         get("/api/task/52").then().statusCode(200)
                 .assertThat().body("description", equalTo("tarefa teste"));
+    }
+
+    @Test
+    public void givenTask_whenPostRequestToCreateTask_thenTaskIsCreated() {
+        String novaTaskJson = """
+                {
+                "description": "Segunda tarefa",
+                "priority": "ALTA"
+                }
+                """;
+
+        given()
+                .contentType("application/json")
+                .body(novaTaskJson)
+                .when()
+                .post("/api/task")
+                .then()
+                .statusCode(201)
+                .header("Location", notNullValue());
+    }
+
+    @Test
+    public void givenTask_whenPutRequestToUpdateTask_thenTaskIsUpdated() {
+        String taskAtualizadaJson = """
+                {
+                "description": "Segunda tarefa atualizada",
+                "priority": "ALTA"
+                }
+                """;
+
+        given()
+                .contentType("application/json")
+                .body(taskAtualizadaJson)
+                .when()
+                .put("/api/task/202")
+                .then()
+                .statusCode(204);
     }
 }
