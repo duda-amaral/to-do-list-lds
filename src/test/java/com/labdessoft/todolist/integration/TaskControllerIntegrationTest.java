@@ -79,4 +79,17 @@ public class TaskControllerIntegrationTest {
                 .then()
                 .statusCode(204);
     }
+
+    @Test
+    public void givenTaskId_whenPutRequestToUpdateStatus_thenStatusIsUpdated() {
+        String taskStatusUpdateJson = "{\"completed\":true}";
+
+        given()
+                .contentType("application/json")
+                .body(taskStatusUpdateJson)
+                .when()
+                .put("api/task/202/completed")
+                .then()
+                .statusCode(204);
+    }
 }
