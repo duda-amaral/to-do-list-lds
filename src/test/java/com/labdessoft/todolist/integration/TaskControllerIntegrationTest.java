@@ -92,4 +92,13 @@ public class TaskControllerIntegrationTest {
                 .then()
                 .statusCode(204);
     }
+
+    @Test
+    public void givenTaskId_whenDeleteRequestToDeleteTask_thenTaskIsDeleted() {
+        given()
+                .when()
+                .delete("/api/task/202")
+                .then()
+                .statusCode(204);
+    }
 }
