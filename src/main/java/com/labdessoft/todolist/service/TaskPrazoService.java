@@ -57,7 +57,7 @@ public class TaskPrazoService {
     @Operation(description = "atualiza o status de uma tarefa do tipo prazo")
     public TaskPrazo updateStatus(TaskPrazo obj)  {
         TaskPrazo newObj = findById(obj.getId());
-        BeanUtils.copyProperties(obj, newObj, "id", "description", "dueDate", "status", "type", "creationDate");
+        BeanUtils.copyProperties(obj, newObj, "id", "description", "dueDays", "status", "type", "creationDate", "priority");
         String status = getStatus(obj.getId());
         newObj.setStatus(status);
         return this.taskPrazoRepository.save(newObj);

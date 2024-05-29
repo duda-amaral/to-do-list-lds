@@ -26,25 +26,23 @@ public class TaskService {
     public List<Task> listAll() {
         return this.taskRepository.findAll();
     }
+
+
     @Operation(description = "cadastra tarefas")
     @Transactional
     public Task create(Task obj) {
         obj.setId(null);
         obj.setCompleted(false);
         obj.setType(TaskTipo.LIVRE);
-
-        obj = this.taskRepository.save(obj);
-
-        String status = getStatus(obj.getId());
-        obj.setStatus(status);
-        return obj;
+        obj.setStatus(getStatus(obj));
+        return this.taskRepository.save(obj);
     }
 
     @Operation(description = "atualiza a descrição de uma tarefa especificada pelo id")
     public Task update(Task obj)  {
         Task newObj = findById(obj.getId());
         BeanUtils.copyProperties(obj, newObj, "id", "completed", "type");
-        String status = getStatus(obj.getId());
+        String status = getStatus(obj);
         newObj.setStatus(status);
         return this.taskRepository.save(newObj);
     }
@@ -53,7 +51,7 @@ public class TaskService {
     public Task updateStatus(Task obj)  {
         Task newObj = findById(obj.getId());
         BeanUtils.copyProperties(obj, newObj, "id", "description", "type");
-        String status = getStatus(obj.getId());
+        String status = getStatus(obj);
         newObj.setStatus(status);
         return this.taskRepository.save(newObj);
     }
@@ -65,8 +63,7 @@ public class TaskService {
     }
 
     @Operation(description = "Retorna o status de uma tarefa especificada pelo id")
-    public String getStatus(Long id) {
-        Task task = findById(id);
+    public String getStatus(Task task) {
 
         if (task.getCompleted() == true) {
             return "Concluída";
