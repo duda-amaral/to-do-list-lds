@@ -37,19 +37,15 @@ public class TaskPrazoService {
         obj.setCompleted(false);
         obj.setType(PRAZO);
         obj.setCreationDate(LocalDate.now());
-
-        obj = this.taskPrazoRepository.save(obj);
-
-        String status = getStatus(obj.getId());
-        obj.setStatus(status);
-        return obj;
+        obj.setStatus(getStatus(obj));
+        return this.taskPrazoRepository.save(obj);
     }
 
     @Operation(description = "atualiza a descrição de uma tarefa do tipo prazo especificada pelo id")
     public TaskPrazo update(TaskPrazo obj)  {
         TaskPrazo newObj = findById(obj.getId());
         BeanUtils.copyProperties(obj, newObj, "id", "completed", "type", "creationDate");
-        String status = getStatus(obj.getId());
+        String status = getStatus(obj);
         newObj.setStatus(status);
         return this.taskPrazoRepository.save(newObj);
     }
@@ -58,7 +54,7 @@ public class TaskPrazoService {
     public TaskPrazo updateStatus(TaskPrazo obj)  {
         TaskPrazo newObj = findById(obj.getId());
         BeanUtils.copyProperties(obj, newObj, "id", "description", "dueDays", "status", "type", "creationDate", "priority");
-        String status = getStatus(obj.getId());
+        String status = getStatus(obj);
         newObj.setStatus(status);
         return this.taskPrazoRepository.save(newObj);
     }
@@ -71,8 +67,7 @@ public class TaskPrazoService {
     }
 
     @Operation(description = "Retorna o status de uma tarefa do tipo prazo especificada pelo id")
-    public String getStatus(Long id) {
-        TaskPrazo task = findById(id);
+    public String getStatus(TaskPrazo task) {
 
         Integer dueDays = task.getDueDays();
         LocalDate currentDate = LocalDate.now();

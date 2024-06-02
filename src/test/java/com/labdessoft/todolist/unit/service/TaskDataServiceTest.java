@@ -118,7 +118,6 @@ public class TaskDataServiceTest {
     @Test
     public void getStatus_Completed() {
         createTaskData.setCompleted(true);
-        when(taskDataRepository.findById(createTaskData.getId())).thenReturn(Optional.of(createTaskData));
         String status = taskDataService.getStatus(createTaskData);
         assertEquals("Concluída", status);
     }
@@ -127,7 +126,6 @@ public class TaskDataServiceTest {
     public void getStatus_Pending() {
         createTaskData.setCompleted(false);
         createTaskData.setDueDate(LocalDate.now().plusDays(1));
-        when(taskDataRepository.findById(createTaskData.getId())).thenReturn(Optional.of(createTaskData));
         String status = taskDataService.getStatus(createTaskData);
         assertEquals("Prevista: " + createTaskData.getDueDate(), status);
     }

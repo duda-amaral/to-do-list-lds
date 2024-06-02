@@ -2,13 +2,13 @@ package com.labdessoft.todolist.mock;
 
 import com.labdessoft.todolist.entity.Task;
 import com.labdessoft.todolist.entity.TaskData;
+import com.labdessoft.todolist.entity.TaskPrazo;
 import lombok.experimental.UtilityClass;
 
 import java.time.LocalDate;
 
 import static com.labdessoft.todolist.enums.Prioridade.*;
-import static com.labdessoft.todolist.enums.TaskTipo.DATA;
-import static com.labdessoft.todolist.enums.TaskTipo.LIVRE;
+import static com.labdessoft.todolist.enums.TaskTipo.*;
 
 @UtilityClass
 public class TaskMock {
@@ -51,6 +51,30 @@ public class TaskMock {
                 .completed(false)
                 .type(DATA)
                 .dueDate(LocalDate.of(2024, 06, 06))
+                .build();
+    }
+
+    public static TaskPrazo createTaskPrazo() {
+        return TaskPrazo.taskPrazoBuilder()
+                .id(60L)
+                .description("tarefa de lds")
+                .priority(MÉDIA)
+                .completed(false)
+                .type(PRAZO)
+                .creationDate(LocalDate.now())
+                .dueDays(10)
+                .build();
+    }
+
+    public static TaskPrazo updateTaskPrazo() {
+        return TaskPrazo.taskPrazoBuilder()
+                .id(60L)
+                .description("tarefa de lds atualizada")
+                .priority(ALTA)
+                .completed(false)
+                .type(PRAZO)
+                .dueDays(10)
+                .creationDate(LocalDate.now())
                 .build();
     }
 }
