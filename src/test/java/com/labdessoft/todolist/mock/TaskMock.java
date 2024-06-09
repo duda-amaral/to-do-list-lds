@@ -39,7 +39,7 @@ public class TaskMock {
                 .priority(MÉDIA)
                 .completed(false)
                 .type(DATA)
-                .dueDate(LocalDate.of(2024, 06, 04))
+                .dueDate(LocalDate.of(2025, 06, 04))
                 .build();
     }
 
@@ -50,7 +50,7 @@ public class TaskMock {
                 .priority(ALTA)
                 .completed(false)
                 .type(DATA)
-                .dueDate(LocalDate.of(2024, 06, 06))
+                .dueDate(LocalDate.of(2025, 06, 06))
                 .build();
     }
 
