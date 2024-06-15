@@ -1,110 +1,103 @@
 package com.labdessoft.todolist.integration;
 
-import com.labdessoft.todolist.ToDoListApplication;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.labdessoft.todolist.controller.TaskController;
 import com.labdessoft.todolist.entity.Task;
-import io.restassured.RestAssured;
-import org.junit.Before;
-import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.test.context.ActiveProfiles;
+import com.labdessoft.todolist.mock.TaskMock;
+import com.labdessoft.todolist.service.TaskService;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
 
-import static com.labdessoft.todolist.mock.TaskMock.createTask;
-import static com.labdessoft.todolist.mock.TaskMock.updateTask;
-import static io.restassured.RestAssured.*;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.notNullValue;
+import java.util.Arrays;
+import java.util.List;
 
-@ExtendWith(MockitoExtension.class)
-@RunWith(JUnitPlatform.class)
-@SpringBootTest(classes = {ToDoListApplication.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("test")
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+@WebMvcTest(TaskController.class)
 public class TaskControllerIntegrationTest {
 
-    @LocalServerPort
-    private int port;
+    @Autowired
+    private MockMvc mockMvc;
 
-    private Task createTask;
+    @MockBean
+    private TaskService taskService;
 
-    private Task updateTask;
+    @Autowired
+    private ObjectMapper objectMapper;
 
-    private static Long taskId = 40L;
+    private Task task;
 
     @BeforeEach
-    public void setup() {
-        RestAssured.baseURI = "http://localhost";
-        RestAssured.port = port;
-
-        createTask = createTask();
-        updateTask = updateTask();
+    public void setUp() {
+        task = TaskMock.createTask();
     }
 
-    @Order(3)
     @Test
-    public void givenUrl_whenSuccessOnGetsResponseAndJsonHasRequiredKV_thenCorrect() {
-        get("/api/task").then().statusCode(200);
+    public void givenTaskId_whenGetTaskById_thenStatus200AndTaskReturned() throws Exception {
+        when(taskService.findById(40L)).thenReturn(task);
+
+        mockMvc.perform(get("/task/40"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(40L))
+                .andExpect(jsonPath("$.description").value("tarefa de fpaa"));
     }
 
-    @Order(2)
     @Test
-    public void givenUrl_whenSuccessOnGetsResponseAndJsonHasOneTask_thenCorrect() {
-        get("/api/task/{id}", taskId).then().statusCode(200)
-                .assertThat().body("description", equalTo("tarefa de fpaa"));
+    public void whenListAllTasks_thenStatus200AndListReturned() throws Exception {
+        List<Task> tasks = Arrays.asList(task);
+        when(taskService.listAll()).thenReturn(tasks);
+
+        mockMvc.perform(get("/task"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(40L))
+                .andExpect(jsonPath("$[0].description").value("tarefa de fpaa"));
     }
 
-    @Order(1)
     @Test
-    public void givenTask_whenPostRequestToCreateTask_thenTaskIsCreated() {
+    public void givenTask_whenPostRequestToCreateTask_thenTaskIsCreated() throws Exception {
+        when(taskService.create(any(Task.class))).thenReturn(task);
 
-        given()
-                .contentType("application/json")
-                .body(createTask)
-                .when()
-                .post("/api/task")
-                .then()
-                .statusCode(201)
-                .header("Location", notNullValue());
+        mockMvc.perform(post("/task")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(task)))
+                .andExpect(status().isCreated())
+                .andExpect(header().exists("Location"));
     }
 
-    @Order(4)
     @Test
-    public void givenTask_whenPutRequestToUpdateTask_thenTaskIsUpdated() {
-        Long id = taskId;
-        given()
-                .contentType("application/json")
-                .body(updateTask)
-                .when()
-                .put("/api/task/{id}", id)
-                .then()
-                .statusCode(204);
+    public void givenTask_whenPutRequestToUpdateTask_thenTaskIsUpdated() throws Exception {
+        Task updatedTask = TaskMock.updateTask();
+        when(taskService.update(any(Task.class))).thenReturn(updatedTask);
+
+        mockMvc.perform(put("/task/40")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updatedTask)))
+                .andExpect(status().isNoContent());
     }
 
-    @Order(5)
     @Test
-    public void givenTaskId_whenPutRequestToUpdateStatus_thenStatusIsUpdated() {
-        String taskStatusUpdateJson = "{\"completed\":true}";
+    public void givenTaskId_whenPutRequestToUpdateStatus_thenStatusIsUpdated() throws Exception {
+        Task updatedTaskStatus = TaskMock.updateTask();
+        updatedTaskStatus.setCompleted(true);
+        when(taskService.updateStatus(any(Task.class))).thenReturn(updatedTaskStatus);
 
-        given()
-                .contentType("application/json")
-                .body(taskStatusUpdateJson)
-                .when()
-                .put("api/task/{id}/completed", taskId)
-                .then()
-                .statusCode(204);
+        mockMvc.perform(put("/task/40/completed")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updatedTaskStatus)))
+                .andExpect(status().isNoContent());
     }
 
-    @Order(6)
     @Test
-    public void givenTaskId_whenDeleteRequestToDeleteTask_thenTaskIsDeleted() {
-        given()
-                .when()
-                .delete("/api/task/{id}", taskId)
-                .then()
-                .statusCode(204);
+    public void givenTasDataId_whenDeleteRequestToDeleteTask_thenTaskIsDeleted() throws Exception {
+        mockMvc.perform(delete("/task/40"))
+                .andExpect(status().isNoContent());
     }
 }
