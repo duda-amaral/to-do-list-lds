@@ -1,100 +1,93 @@
 package com.labdessoft.todolist.integration;
 
-import com.labdessoft.todolist.ToDoListApplication;
-import io.restassured.RestAssured;
-import org.junit.Before;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.labdessoft.todolist.controller.TaskPrazoController;
+import com.labdessoft.todolist.entity.TaskPrazo;
+import com.labdessoft.todolist.mock.TaskMock;
+import com.labdessoft.todolist.service.TaskPrazoService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
 
-import static io.restassured.RestAssured.*;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.notNullValue;
+import java.util.Arrays;
+import java.util.List;
 
-@ExtendWith(MockitoExtension.class)
-@RunWith(JUnitPlatform.class)
-@SpringBootTest(classes = {ToDoListApplication.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("test")
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+@WebMvcTest(TaskPrazoController.class)
 public class TaskPrazoControllerIntegrationTest {
 
-    @LocalServerPort
-    private int port;
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockBean
+    private TaskPrazoService taskService;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    private TaskPrazo taskPrazo;
 
     @BeforeEach
-    public void setup() {
-        RestAssured.baseURI = "http://localhost";
-        RestAssured.port = port;
+    public void setUp() {
+        taskPrazo = TaskMock.createTaskPrazo();
     }
 
     @Test
-    public void givenUrl_whenSuccessOnGetsResponseAndJsonHasRequiredKV_thenCorrect() {
-        get("/api/taskprazo").then().statusCode(200);
+    public void givenTaskPrazoList_whenListAll_thenStatus200AndListReturned() throws Exception {
+        List<TaskPrazo> taskPrazoList = Arrays.asList(taskPrazo);
+        when(taskService.listAll()).thenReturn(taskPrazoList);
+
+        mockMvc.perform(get("/taskprazo"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(60L))
+                .andExpect(jsonPath("$[0].description").value("tarefa de lds"));
     }
 
     @Test
-    public void givenTaskPrazo_whenPostRequestToCreateTask_thenTaskIsCreated() {
-        String novaTaskJson = """
-                {
-                "description": "tarefa de fpaa",
-                "priority": "ALTA",
-                "dueDays": 12
-                }
-                """;
+    public void givenTaskPrazo_whenCreate_thenStatus201AndLocationHeader() throws Exception {
+        when(taskService.create(any(TaskPrazo.class))).thenReturn(taskPrazo);
 
-        given()
-                .contentType("application/json")
-                .body(novaTaskJson)
-                .when()
-                .post("/api/taskprazo")
-                .then()
-                .statusCode(201)
-                .header("Location", notNullValue());
+        mockMvc.perform(post("/taskprazo")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(taskPrazo)))
+                .andExpect(status().isCreated())
+                .andExpect(header().exists("Location"));
     }
 
     @Test
-    public void givenTaskPrazo_whenPutRequestToUpdateTask_thenTaskIsUpdated() {
-        String taskAtualizadaJson = """
-                {
-                "description": "tarefa de ihc atualizada",
-                "priority": "BAIXA",
-                "dueDays": 14
-                }
-                """;
+    public void givenUpdatedTaskPrazo_whenUpdate_thenStatus204() throws Exception {
+        TaskPrazo updatedTaskPrazo = TaskMock.updateTaskPrazo();
+        when(taskService.update(any(TaskPrazo.class))).thenReturn(updatedTaskPrazo);
 
-        given()
-                .contentType("application/json")
-                .body(taskAtualizadaJson)
-                .when()
-                .put("/api/taskprazo/452")
-                .then()
-                .statusCode(204);
+        mockMvc.perform(put("/taskprazo/60")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updatedTaskPrazo)))
+                .andExpect(status().isNoContent());
     }
 
     @Test
-    public void givenTaskPrazoId_whenPutRequestToUpdateStatus_thenStatusIsUpdated() {
-        String taskStatusUpdateJson = "{\"completed\":true}";
+    public void givenCompletedTaskPrazo_whenUpdateStatus_thenStatus204() throws Exception {
+        TaskPrazo updatedTaskPrazoStatus = TaskMock.updateTaskPrazo();
+        updatedTaskPrazoStatus.setCompleted(true);
+        when(taskService.updateStatus(any(TaskPrazo.class))).thenReturn(updatedTaskPrazoStatus);
 
-        given()
-                .contentType("application/json")
-                .body(taskStatusUpdateJson)
-                .when()
-                .put("api/taskprazo/502/completed")
-                .then()
-                .statusCode(204);
+        mockMvc.perform(put("/taskprazo/60/completed")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updatedTaskPrazoStatus)))
+                .andExpect(status().isNoContent());
     }
 
     @Test
-    public void givenTaskPrazoId_whenDeleteRequestToDeleteTask_thenTaskIsDeleted() {
-        given()
-                .when()
-                .delete("/api/taskprazo/353")
-                .then()
-                .statusCode(204);
+    public void givenTaskPrazoId_whenDelete_thenStatus204() throws Exception {
+        mockMvc.perform(delete("/taskprazo/60"))
+                .andExpect(status().isNoContent());
     }
 }
