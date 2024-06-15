@@ -36,19 +36,15 @@ public class TaskDataService {
         obj.setId(null);
         obj.setCompleted(false);
         obj.setType(DATA);
-
-        obj = this.taskDataRepository.save(obj);
-
-        String status = getStatus(obj.getId());
-        obj.setStatus(status);
-        return obj;
+        obj.setStatus(getStatus(obj));
+        return this.taskDataRepository.save(obj);
     }
 
     @Operation(description = "atualiza a descrição de uma tarefa do tipo data especificada pelo id")
     public TaskData update(TaskData obj)  {
         TaskData newObj = findById(obj.getId());
         BeanUtils.copyProperties(obj, newObj, "id", "completed", "type");
-        String status = getStatus(obj.getId());
+        String status = getStatus(obj);
         newObj.setStatus(status);
         return this.taskDataRepository.save(newObj);
     }
@@ -57,7 +53,7 @@ public class TaskDataService {
     public TaskData updateStatus(TaskData obj)  {
         TaskData newObj = findById(obj.getId());
         BeanUtils.copyProperties(obj, newObj, "id", "description", "dueDate", "status", "type");
-        String status = getStatus(obj.getId());
+        String status = getStatus(obj);
         newObj.setStatus(status);
         return this.taskDataRepository.save(newObj);
     }
@@ -76,8 +72,7 @@ public class TaskDataService {
     }
 
     @Operation(description = "Retorna o status de uma tarefa do tipo data especificada pelo id")
-    public String getStatus(Long id) {
-        TaskData task = findById(id);
+    public String getStatus(TaskData task) {
 
         LocalDate dueDate = task.getDueDate();
         LocalDate currentDate = LocalDate.now();
