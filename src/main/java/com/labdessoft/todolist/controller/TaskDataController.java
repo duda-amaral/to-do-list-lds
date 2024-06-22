@@ -15,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/taskdata")
+@CrossOrigin(origins = "http://localhost:3000")
 public class TaskDataController {
     @Autowired
     private TaskDataService taskService;
