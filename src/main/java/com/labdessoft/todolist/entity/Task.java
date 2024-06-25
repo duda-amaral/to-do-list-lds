@@ -20,7 +20,7 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.TABLE)
     protected Long id;
 
-    @Schema(name = "Descrição da tarefa deve possuir pelo menos 10 caracteres")
+    @Schema(description = "Descrição da tarefa deve possuir pelo menos 10 caracteres")
     @Size(min = 10, message = "Descrição da tarefa deve possuir pelo menos 10 caracteres")
     protected String description;
 
