@@ -44,9 +44,9 @@ const TasksTable = () => {
         <div
           key={task.id}
           className={`bg-white rounded-lg shadow-md p-4 flex flex-col justify-between ${
-            task.status === "Concluída"
+            task.completed === true
               ? "bg-green-100"
-              : task.status === "Pendente"
+              : task.completed === false
               ? "bg-yellow-100"
               : "bg-white"
           } hover:bg-gray-100 transition-colors`}
@@ -67,7 +67,7 @@ const TasksTable = () => {
                   : "bg-gray-200 text-gray-800"
               }`}
             >
-              {task.completed ? "Completada" : "Não completada"}
+              {task.completed ? "Concluída" : "Não concluída"}
             </span>
           </div>
           <div className="flex flex-wrap justify-end gap-2 mt-2">
