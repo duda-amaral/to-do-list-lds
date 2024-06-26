@@ -82,3 +82,42 @@ export const completeTask = async (taskId: number, completed: boolean) => {
     console.error("Error completing task:", error);
   }
 };
+
+export const createTask = async (description: string, priority: string) => {
+  const response = await fetch("https://to-do-list-lds.onrender.com/task", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ description, priority }),
+  });
+  if (!response.ok) {
+    throw new Error("Erro ao criar tarefa");
+  }
+};
+
+export const createTaskData = async (description: string, priority: string, dueDate: Date | null) => {
+  const response = await fetch("https://to-do-list-lds.onrender.com/taskdata", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ description, priority, dueDate }),
+  });
+  if (!response.ok) {
+    throw new Error("Erro ao criar tarefa");
+  }
+};
+
+export const createTaskPrazo = async (description: string, priority: string, dueDays: number | null) => {
+  const response = await fetch("https://to-do-list-lds.onrender.com/taskprazo", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ description, priority, dueDays }),
+  });
+  if (!response.ok) {
+    throw new Error("Erro ao criar tarefa");
+  }
+};

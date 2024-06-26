@@ -18,4 +18,12 @@ export enum Prioridade {
     type: TaskTipo;
     status: string;
   }
+
+  export interface TaskPrazo extends Task{
+    dueDays: number;
+  }
+
+  export interface TaskData extends Task{
+    dueDate: string;
+  }
   

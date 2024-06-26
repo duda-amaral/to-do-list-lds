@@ -6,7 +6,8 @@ import TaskPrazoForm from "./task-prazo-form";
 export default function TaskFormTabs() {
   return (
     <>
-      <Tabs defaultValue="account" className="w-[400px]">
+      <Tabs defaultValue="livre" className="w-[400px]">
+      <h1 className="p-5 font-semibold">Criar tarefas</h1>
         <TabsList>
           <TabsTrigger value="livre">Livre</TabsTrigger>
           <TabsTrigger value="data">Data</TabsTrigger>

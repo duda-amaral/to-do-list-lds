@@ -43,26 +43,27 @@ const TasksTable = () => {
   return (
     <div className="p-4 sm:p-6 md:p-8 lg:p-10">
       <div className="overflow-x-auto">
+      <h1 className="p-5 font-semibold">Suas tarefas</h1>
         <table className="w-full table-auto border-collapse rounded-lg shadow-lg">
           <thead>
             <tr className="bg-gray-200">
               <th className="px-6 py-3 text-left font-medium text-gray-700">
-                Description
+                Descrição
               </th>
               <th className="px-6 py-3 text-left font-medium text-gray-700">
-                Completed
+                Completada?
               </th>
               <th className="px-6 py-3 text-left font-medium text-gray-700">
-                Priority
+                Prioridade
               </th>
               <th className="px-6 py-3 text-left font-medium text-gray-700">
-                Type
+                Tipo
               </th>
               <th className="px-6 py-3 text-left font-medium text-gray-700">
                 Status
               </th>
               <th className="px-6 py-3 text-left font-medium text-gray-700">
-                Actions
+                Ações
               </th>
             </tr>
           </thead>

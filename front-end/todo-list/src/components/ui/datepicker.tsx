@@ -1,27 +1,44 @@
-"use client"
+import * as React from "react";
+import { CalendarIcon } from "@radix-ui/react-icons";
+import { addDays, format } from "date-fns";
 
-import * as React from "react"
-import { CalendarIcon } from "@radix-ui/react-icons"
-import { addDays, format } from "date-fns"
-
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar"
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
+} from "@/components/ui/popover";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
 
-export function DatePickerWithPresets() {
-  const [date, setDate] = React.useState<Date>()
+interface DatePickerWithPresetsProps {
+  onChange: (date: Date | null) => void;
+}
+
+export const DatePickerWithPresets: React.FC<DatePickerWithPresetsProps> = ({
+  onChange,
+}) => {
+  const [date, setDate] = React.useState<Date>();
+
+  const handleSelectDate = (selectedDate: Date | undefined) => {
+    setDate(selectedDate);
+    onChange(selectedDate || null);
+  };
+
+  const handlePresetChange = (value: string) => {
+    const daysToAdd = parseInt(value);
+    if (!isNaN(daysToAdd)) {
+      setDate(addDays(new Date(), daysToAdd));
+      onChange(addDays(new Date(), daysToAdd));
+    }
+  };
 
   return (
     <Popover>
@@ -37,15 +54,8 @@ export function DatePickerWithPresets() {
           {date ? format(date, "PPP") : <span>Pick a date</span>}
         </Button>
       </PopoverTrigger>
-      <PopoverContent
-        align="start"
-        className="flex w-auto flex-col space-y-2 p-2"
-      >
-        <Select
-          onValueChange={(value) =>
-            setDate(addDays(new Date(), parseInt(value)))
-          }
-        >
+      <PopoverContent align="start" className="flex w-auto flex-col space-y-2 p-2">
+        <Select onValueChange={handlePresetChange}>
           <SelectTrigger>
             <SelectValue placeholder="Select" />
           </SelectTrigger>
@@ -57,9 +67,9 @@ export function DatePickerWithPresets() {
           </SelectContent>
         </Select>
         <div className="rounded-md border">
-          <Calendar mode="single" selected={date} onSelect={setDate} />
+          <Calendar mode="single" selected={date} onSelect={handleSelectDate} />
         </div>
       </PopoverContent>
     </Popover>
-  )
-}
+  );
+};

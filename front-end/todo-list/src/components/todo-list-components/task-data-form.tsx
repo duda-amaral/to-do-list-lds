@@ -1,4 +1,5 @@
-import React from "react";
+'use client'
+import React, { useState } from "react";
 import { Label } from "../ui/label";
 import {
   Select,
@@ -18,25 +19,34 @@ import {
   CardFooter,
 } from "../ui/card";
 import { DatePickerWithPresets } from "../ui/datepicker";
+import { handleSubmitTaskData } from "@/handlers/handleSubmit";
 
 const TaskDataForm = () => {
+  const [description, setDescription] = useState("");
+  const [priority, setPriority] = useState("");
+  const [dueDate, setDueDate] = useState<Date | null>(null);
+
   return (
-    <Card className="w-[350px] text-black bg-transparent">
+    <Card className="w-[350px] text-black bg-white">
       <CardHeader>
         <CardTitle>Criar tarefa</CardTitle>
         <CardDescription>Crie sua tarefa do tipo Data.</CardDescription>
       </CardHeader>
       <CardContent>
-        <form>
+        <form
+          onSubmit={(e) =>
+            handleSubmitTaskData(e, description, priority, dueDate)
+          }
+        >
           <div className="grid w-full items-center gap-4">
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="description">Descrição</Label>
-              <Input id="description" placeholder="descrição da tarefa" />
+              <Input id="description" value={description} onChange={(e) => setDescription(e.target.value)} type="text" required min="10" placeholder="descrição da tarefa" />
             </div>
             <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="prioridade">Prioridade</Label>
-              <Select>
-                <SelectTrigger id="prioridade">
+              <Label htmlFor="priority">Prioridade</Label>
+              <Select onValueChange={(value) => setPriority(value)}>
+                <SelectTrigger id="priority">
                   <SelectValue placeholder="Select" />
                 </SelectTrigger>
                 <SelectContent position="popper">
@@ -45,14 +55,17 @@ const TaskDataForm = () => {
                   <SelectItem value="BAIXA">Baixa</SelectItem>
                 </SelectContent>
               </Select>
-              <DatePickerWithPresets/>
+            </div>
+            <div className="flex flex-col space-y-1.5">
+              <Label htmlFor="dueDate">Data</Label>
+              <DatePickerWithPresets onChange={setDueDate}/>
             </div>
           </div>
         </form>
       </CardContent>
       <CardFooter className="flex justify-between">
-        <Button variant="destructive">Cancel</Button>
-        <Button variant="outline">Salvar</Button>
+        <Button variant="destructive" type="reset">Cancel</Button>
+        <Button variant="outline" type="submit">Salvar</Button>
       </CardFooter>
     </Card>
   );

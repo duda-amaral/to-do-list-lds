@@ -1,4 +1,5 @@
-import React from "react";
+'use client'
+import React, { useState } from "react";
 import { Label } from "../ui/label";
 import {
   Select,
@@ -17,29 +18,34 @@ import {
   CardContent,
   CardFooter,
 } from "../ui/card";
+import { handleSubmitTaskPrazo } from "@/handlers/handleSubmit";
 
 const TaskPrazoForm = () => {
+  const [description, setDescription] = useState("");
+  const [priority, setPriority] = useState("");
+  const [dueDays, setDueDays] = useState(0);
+  
   return (
-    <Card className="w-[350px] text-black bg-transparent">
+    <Card className="w-[350px] text-black bg-white">
       <CardHeader>
         <CardTitle>Criar tarefa</CardTitle>
         <CardDescription>Crie sua tarefa do tipo Prazo.</CardDescription>
       </CardHeader>
       <CardContent>
-        <form>
+        <form onSubmit={(e) => handleSubmitTaskPrazo(e, description, priority, dueDays)}>
           <div className="grid w-full items-center gap-4">
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="description">Descrição</Label>
-              <Input id="description" type="text" required min="10" placeholder="descrição da tarefa" />
+              <Input id="description"  value={description}  onChange={(e) => setDescription(e.target.value)} type="text" required min="10" placeholder="descrição da tarefa" />
             </div>
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="dueDays">Prazo</Label>
-              <Input id="dueDays" type="number" required placeholder="prazo da tarefa" />
+              <Input id="dueDays" value={dueDays}  onChange={(e) => setDueDays(Number(e.target.value))} type="number" required placeholder="prazo da tarefa" />
             </div>
             <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="prioridade">Prioridade</Label>
-              <Select>
-                <SelectTrigger id="prioridade">
+              <Label htmlFor="priority">Prioridade</Label>
+              <Select onValueChange={(value) => setPriority(value)}>
+                <SelectTrigger id="priority">
                   <SelectValue placeholder="Select" />
                 </SelectTrigger>
                 <SelectContent position="popper">
