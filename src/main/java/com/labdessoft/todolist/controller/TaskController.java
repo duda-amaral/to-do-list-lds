@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/task")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "https://to-do-list-front-end-c4oy.onrender.com")
 public class TaskController {
 
     @Autowired
