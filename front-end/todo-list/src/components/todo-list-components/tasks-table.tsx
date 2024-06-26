@@ -44,9 +44,9 @@ const TasksTable = () => {
         <div
           key={task.id}
           className={`bg-white rounded-lg shadow-md p-4 flex flex-col justify-between ${
-            task.status === "Completed"
+            task.status === "Concluída"
               ? "bg-green-100"
-              : task.status === "Em andamento"
+              : task.status === "Pendente"
               ? "bg-yellow-100"
               : "bg-white"
           } hover:bg-gray-100 transition-colors`}
@@ -131,7 +131,7 @@ const TasksTable = () => {
                   size="sm"
                   variant="destructive"
                   onClick={() => handleDelete(task.id, setTasks)}
-                  className="mt-2 bg-red-800"
+                  className="mt-2"
                 >
                   Deletar
                 </Button>
