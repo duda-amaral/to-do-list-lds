@@ -80,8 +80,9 @@ const TasksTable = () => {
                 </Select>
                 <Button
                   size="sm"
+                  variant="outline"
                   onClick={() => handleSave(task.id, tasks, newDescription, newPriority, newType)}
-                  className="mt-2"
+                  className="mt-2 bg-green-700"
                 >
                   Save
                 </Button>
@@ -98,8 +99,9 @@ const TasksTable = () => {
               <>
                 <Button
                   size="sm"
+                  variant="outline"
                   onClick={() => handleEdit(task.id)}
-                  className="mt-2"
+                  className="mt-2 bg-amber-300"
                 >
                   Editar
                 </Button>
@@ -107,12 +109,13 @@ const TasksTable = () => {
                   size="sm"
                   variant="outline"
                   onClick={() => handleDelete(task.id, setTasks)}
-                  className="mt-2"
+                  className="mt-2 bg-red-600"
                 >
                   Deletar
                 </Button>
                 <Button
                   size="sm"
+                  variant="outline"
                   onClick={() => handleComplete(task.id, task.completed, setTasks)}
                   className="mt-2"
                 >
