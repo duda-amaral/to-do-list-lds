@@ -94,6 +94,7 @@ export const createTask = async (description: string, priority: string) => {
   if (!response.ok) {
     throw new Error("Erro ao criar tarefa");
   }
+  fetchTasks();
 };
 
 export const createTaskData = async (description: string, priority: string, dueDate: Date | null) => {
@@ -107,6 +108,7 @@ export const createTaskData = async (description: string, priority: string, dueD
   if (!response.ok) {
     throw new Error("Erro ao criar tarefa");
   }
+  fetchTasks();
 };
 
 export const createTaskPrazo = async (description: string, priority: string, dueDays: number | null) => {
@@ -120,4 +122,5 @@ export const createTaskPrazo = async (description: string, priority: string, due
   if (!response.ok) {
     throw new Error("Erro ao criar tarefa");
   }
+  fetchTasks();
 };
