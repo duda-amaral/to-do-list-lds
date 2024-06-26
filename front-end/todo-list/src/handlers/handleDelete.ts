@@ -5,7 +5,7 @@ export const handleDelete = async (taskId: number, setTasks: (tasks: Task[]) => 
   try {
     await deleteTask(taskId);
     const updatedTasks = await fetchTasks();
-    setTasks(updatedTasks); // Refresh task list after successful deletion
+    setTasks(updatedTasks);
   } catch (error) {
     console.error("Error deleting task:", error);
   }

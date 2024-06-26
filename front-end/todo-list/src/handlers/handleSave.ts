@@ -11,8 +11,10 @@ export const handleSave = async (taskId: number, tasks: Task[], newDescription: 
       type: newType,
     };
     await updateTask(taskId, updatedTask);
-    await fetchTasks();
+    const updatedTasks = await fetchTasks();
+    return updatedTasks;
   } catch (error) {
     console.error("Error updating task:", error);
+    throw error; 
   }
 };
