@@ -41,139 +41,81 @@ const TasksTable = () => {
   }, []);
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 lg:p-10">
-      <div className="overflow-x-auto">
-      <h1 className="p-5 font-semibold">Suas tarefas</h1>
-        <table className="w-full table-auto border-collapse rounded-lg shadow-lg">
-          <thead>
-            <tr className="bg-gray-200">
-              <th className="px-6 py-3 text-left font-medium text-gray-700">
-                Descrição
-              </th>
-              <th className="px-6 py-3 text-left font-medium text-gray-700">
-                Completada?
-              </th>
-              <th className="px-6 py-3 text-left font-medium text-gray-700">
-                Prioridade
-              </th>
-              <th className="px-6 py-3 text-left font-medium text-gray-700">
-                Tipo
-              </th>
-              <th className="px-6 py-3 text-left font-medium text-gray-700">
-                Status
-              </th>
-              <th className="px-6 py-3 text-left font-medium text-gray-700">
-                Ações
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {tasks.map((task) => (
-              <tr
-                key={task.id}
-                className={`border-b ${
-                  task.status === "Completed"
-                    ? "bg-green-100"
-                    : task.status === "Em andamento"
-                    ? "bg-yellow-100"
-                    : "bg-white"
-                } hover:bg-gray-100 transition-colors`}
-              >
-                <td className="px-6 py-4">
-                  {editingTaskId === task.id ? (
-                    <Input
-                      type="text"
-                      value={newDescription}
-                      onChange={(e) => setNewDescription(e.target.value)}
-                      className="w-full"
-                    />
-                  ) : (
-                    task.description
-                  )}
-                </td>
-                <td className="px-6 py-4">
-                  {task.completed ? (
-                    "Sim"
-                  ) : (
-                    "Não"
-                  )}
-                </td>
-                <td className="px-6 py-4">
-                  {editingTaskId === task.id ? (
-                    <Select
-                      value={newPriority}
-                      onValueChange={(value) =>
-                        setNewPriority(value as Prioridade)
-                      }
-                    >
-                      <SelectTrigger id="priority">
-                        <SelectValue placeholder="Select" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="BAIXA">Baixa</SelectItem>
-                        <SelectItem value="MÉDIA">Média</SelectItem>
-                        <SelectItem value="ALTA">Alta</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  ) : (
-                    task.priority
-                  )}
-                </td>
-                <td className="px-6 py-4">
-                  {task.type}
-                </td>
-                <td className="px-6 py-4">
-                  {task.status}
-                </td>
-                <td className="px-6 py-4 flex items-center gap-2">
-                  {editingTaskId === task.id ? (
-                    <>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => handleSave(task.id, tasks, newDescription, newPriority, newType)}
-                      >
-                        Save
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => setEditingTaskId(null)}
-                      >
-                        Cancel
-                      </Button>
-                    </>
-                  ) : (
-                    <>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => handleEdit(task.id)}
-                      >
-                        Editar
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => handleDelete(task.id, setTasks)}
-                      >
-                        Deletar
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => handleComplete(task.id, task.completed, setTasks)}
-                      >
-                        Completada
-                      </Button>
-                    </>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 sm:p-6 md:p-8 lg:p-10">
+      {tasks.map((task) => (
+        <div
+          key={task.id}
+          className={`bg-white rounded-lg shadow-md p-4 ${task.status === 'Completed' ? 'bg-green-100' : task.status === 'Em andamento' ? 'bg-yellow-100' : 'bg-white'} hover:bg-gray-100 transition-colors`}
+        >
+          <div className="flex justify-between items-center mb-2">
+            <h3 className="text-lg font-medium">{task.description}</h3>
+            <span className={`px-2 py-1 text-xs font-semibold rounded ${task.completed ? 'bg-green-200 text-green-800' : 'bg-gray-200 text-gray-800'}`}>{task.completed ? 'Completada' : 'Não completada'}</span>
+          </div>
+          <p className="text-sm text-gray-700 mb-2">Prioridade: {task.priority}</p>
+          <p className="text-sm text-gray-700 mb-2">Tipo: {task.type}</p>
+          <p className="text-sm text-gray-700 mb-2">Status: {task.status}</p>
+          <div className="flex justify-end gap-2">
+            {editingTaskId === task.id ? (
+              <>
+                <Input
+                  type="text"
+                  value={newDescription}
+                  onChange={(e) => setNewDescription(e.target.value)}
+                  className="w-full"
+                />
+                <Select
+                  value={newPriority}
+                  onValueChange={(value) => setNewPriority(value as Prioridade)}
+                >
+                  <SelectTrigger id="priority">
+                    <SelectValue>{newPriority}</SelectValue>
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="BAIXA">Baixa</SelectItem>
+                    <SelectItem value="MÉDIA">Média</SelectItem>
+                    <SelectItem value="ALTA">Alta</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Button
+                  size="sm"
+                  onClick={() => handleSave(task.id, tasks, newDescription, newPriority, newType)}
+                >
+                  Save
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setEditingTaskId(null)}
+                >
+                  Cancel
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button
+                  size="sm"
+                  onClick={() => handleEdit(task.id)}
+                >
+                  Editar
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => handleDelete(task.id, setTasks)}
+                >
+                  Deletar
+                </Button>
+                <Button
+                  size="sm"
+                  onClick={() => handleComplete(task.id, task.completed, setTasks)}
+                >
+                  Completada
+                </Button>
+              </>
+            )}
+          </div>
+        </div>
+      ))}
     </div>
   );
 };
