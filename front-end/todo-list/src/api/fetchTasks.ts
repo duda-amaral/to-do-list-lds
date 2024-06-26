@@ -84,7 +84,7 @@ export const completeTask = async (taskId: number, completed: boolean) => {
 };
 
 export const createTask = async (description: string, priority: string) => {
-  const response = await fetch("https://to-do-list-lds.onrender.com/task", {
+  const response = await fetch("https://to-do-list-lds.onrender.com/api/task", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -97,7 +97,7 @@ export const createTask = async (description: string, priority: string) => {
 };
 
 export const createTaskData = async (description: string, priority: string, dueDate: Date | null) => {
-  const response = await fetch("https://to-do-list-lds.onrender.com/taskdata", {
+  const response = await fetch("https://to-do-list-lds.onrender.com/api/taskdata", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -110,7 +110,7 @@ export const createTaskData = async (description: string, priority: string, dueD
 };
 
 export const createTaskPrazo = async (description: string, priority: string, dueDays: number | null) => {
-  const response = await fetch("https://to-do-list-lds.onrender.com/taskprazo", {
+  const response = await fetch("https://to-do-list-lds.onrender.com/api/taskprazo", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
