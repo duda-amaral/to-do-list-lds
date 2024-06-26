@@ -44,7 +44,7 @@ const TasksTable = () => {
         <div
           key={task.id}
           className={`bg-white rounded-lg shadow-md p-4 flex flex-col justify-between ${
-            task.completed === true
+            task.completed
               ? "bg-green-100"
               : task.completed === false
               ? "bg-yellow-100"
