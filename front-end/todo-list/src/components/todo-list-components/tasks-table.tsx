@@ -56,7 +56,7 @@ const TasksTable = () => {
             <p className="text-sm text-gray-700 mb-2">Tipo: {task.type}</p>
             <p className="text-sm text-gray-700 mb-2">Status: {task.status}</p>
           </div>
-          <div className="flex justify-end gap-2 mt-2">
+          <div className="flex flex-wrap justify-end gap-2 mt-2">
             {editingTaskId === task.id ? (
               <>
                 <Input
