@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import React, { useState } from "react";
 import { Label } from "../ui/label";
 import {
@@ -30,12 +30,20 @@ const TaskForm = () => {
         <CardTitle>Criar tarefa</CardTitle>
         <CardDescription>Crie sua tarefa do tipo Livre.</CardDescription>
       </CardHeader>
-      <CardContent>
-        <form onSubmit={(e) => handleSubmitTask(e, description, priority)}>
+      <form onSubmit={(e) => handleSubmitTask(e, description, priority)}>
+        <CardContent>
           <div className="grid w-full items-center gap-4">
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="description">Descrição</Label>
-              <Input id="description" value={description}  onChange={(e) => setDescription(e.target.value)} type="text" required min="10" placeholder="descrição da tarefa" />
+              <Input
+                id="description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                type="text"
+                required
+                min="10"
+                placeholder="descrição da tarefa"
+              />
             </div>
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="priority">Prioridade</Label>
@@ -51,12 +59,16 @@ const TaskForm = () => {
               </Select>
             </div>
           </div>
-        </form>
-      </CardContent>
-      <CardFooter className="flex justify-between">
-        <Button variant="destructive" type="button">Cancel</Button>
-        <Button variant="outline" type="submit">Salvar</Button>
-      </CardFooter>
+        </CardContent>
+        <CardFooter className="flex justify-between">
+          <Button variant="destructive" type="button">
+            Cancel
+          </Button>
+          <Button variant="outline" type="submit">
+            Salvar
+          </Button>
+        </CardFooter>
+      </form>
     </Card>
   );
 };

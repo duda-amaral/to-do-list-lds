@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import React, { useState } from "react";
 import { Label } from "../ui/label";
 import {
@@ -24,23 +24,42 @@ const TaskPrazoForm = () => {
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState("");
   const [dueDays, setDueDays] = useState(0);
-  
+
   return (
     <Card className="w-[350px] text-black bg-white">
       <CardHeader>
         <CardTitle>Criar tarefa</CardTitle>
         <CardDescription>Crie sua tarefa do tipo Prazo.</CardDescription>
       </CardHeader>
-      <CardContent>
-        <form onSubmit={(e) => handleSubmitTaskPrazo(e, description, priority, dueDays)}>
+      <form
+        onSubmit={(e) =>
+          handleSubmitTaskPrazo(e, description, priority, dueDays)
+        }
+      >
+        <CardContent>
           <div className="grid w-full items-center gap-4">
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="description">Descrição</Label>
-              <Input id="description"  value={description}  onChange={(e) => setDescription(e.target.value)} type="text" required min="10" placeholder="descrição da tarefa" />
+              <Input
+                id="description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                type="text"
+                required
+                min="10"
+                placeholder="descrição da tarefa"
+              />
             </div>
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="dueDays">Prazo</Label>
-              <Input id="dueDays" value={dueDays}  onChange={(e) => setDueDays(Number(e.target.value))} type="number" required placeholder="prazo da tarefa" />
+              <Input
+                id="dueDays"
+                value={dueDays}
+                onChange={(e) => setDueDays(Number(e.target.value))}
+                type="number"
+                required
+                placeholder="prazo da tarefa"
+              />
             </div>
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="priority">Prioridade</Label>
@@ -56,12 +75,12 @@ const TaskPrazoForm = () => {
               </Select>
             </div>
           </div>
-        </form>
-      </CardContent>
-      <CardFooter className="flex justify-between">
-        <Button variant="destructive">Cancel</Button>
-        <Button variant="outline">Salvar</Button>
-      </CardFooter>
+        </CardContent>
+        <CardFooter className="flex justify-between">
+          <Button variant="destructive">Cancel</Button>
+          <Button variant="outline">Salvar</Button>
+        </CardFooter>
+      </form>
     </Card>
   );
 };
