@@ -1,0 +1,155 @@
+@startuml
+title Diagrama de Sequência para Operações CRUD em Task
+
+actor Usuário
+Boundary Frontend
+Boundary SpringBoot
+Control taskController
+Participant taskService
+Participant taskRepository
+Database TodoList
+
+activate SpringBoot
+
+== Listar Todas as Tarefas ==
+Usuário -> Frontend: Listar todas as Tarefas
+activate Usuário
+activate Frontend
+Frontend -> SpringBoot: GET /task
+group to-do-list-lds [Spring Boot Java Application]
+SpringBoot -> taskController: listAll()
+activate taskController
+taskController -> taskService: listAll()
+activate taskService
+taskService -> taskRepository: findAll()
+activate taskRepository
+taskRepository -> TodoList: SELECT * FROM Task
+TodoList --> taskRepository: List<Task>
+taskRepository --> taskService: List<Task>
+destroy taskRepository
+taskService --> taskController: List<Task>
+destroy taskService
+taskController --> SpringBoot: ResponseEntity<List<Task>> ResponseEntity.ok(List<Task>)
+destroy taskController
+end
+SpringBoot --> Frontend: ResponseEntity<List<Task>> ResponseEntity.ok(List<Task>)
+Frontend --> Usuário: <list>Task
+deactivate Frontend
+deactivate Usuário
+
+== Criar Tarefa ==
+Usuário -> Frontend: Criar Tarefa
+activate Usuário
+activate Frontend
+Frontend -> SpringBoot: POST /task
+group to-do-list-lds [Spring Boot Java Application]
+SpringBoot -> taskController: create(Task obj)
+activate taskController
+taskController -> taskService: create(Task obj)
+activate taskService
+taskService -> taskRepository: save(Task obj)
+activate taskRepository
+taskRepository -> TodoList: INSERT INTO Task
+TodoList --> taskRepository: Task saved
+taskRepository --> taskService: Task saved
+destroy taskRepository
+taskService --> taskController: Task saved
+destroy taskService
+taskController --> SpringBoot: ResponseEntity<Void> ResponseEntity.created(URI)
+destroy taskController
+end
+SpringBoot --> Frontend: ResponseEntity<Void> ResponseEntity.created(URI)
+Frontend --> Usuário: Tarefa Criada
+deactivate Frontend
+deactivate Usuário
+
+== Atualizar Tarefa ==
+Usuário -> Frontend: Atualizar Tarefa
+activate Usuário
+activate Frontend
+Frontend -> SpringBoot: PUT /task/{id}
+group to-do-list-lds[Spring Boot Java Application]
+SpringBoot -> taskController: update(Task obj)
+activate taskController
+taskController -> taskService: update(Task obj)
+activate taskService
+taskService -> taskRepository: findById(obj.getId())
+activate taskRepository
+taskRepository -> TodoList: SELECT * FROM Task WHERE id = obj.getId()
+TodoList --> taskRepository: Task found
+taskRepository --> taskService: Task found
+taskService -> taskRepository: save(Task updated)
+taskRepository -> TodoList: UPDATE Task
+TodoList --> taskRepository: Task updated
+taskRepository --> taskService: Task updated
+destroy taskRepository
+taskService --> taskController: Task updated
+destroy taskService
+taskController --> SpringBoot: ResponseEntity<Void> ResponseEntity.noContent()
+destroy taskController
+end
+SpringBoot --> Frontend: ResponseEntity<Void> ResponseEntity.noContent()
+Frontend --> Usuário: Tarefa Atualizada
+deactivate Frontend
+deactivate Usuário
+
+== Atualizar Status ==
+Usuário -> Frontend: Atualizar Status da Tarefa
+activate Usuário
+activate Frontend
+Frontend -> SpringBoot: PUT /task/{id}/completed
+group to-do-list-lds [Spring Boot Java Application]
+SpringBoot -> taskController: updateStatus(Task obj)
+activate taskController
+taskController -> taskService: updateStatus(Task obj)
+activate taskService
+taskService -> taskRepository: findById(obj.getId())
+activate taskRepository
+taskRepository -> TodoList: SELECT * FROM Task WHERE id = obj.getId()
+TodoList --> taskRepository: Task found
+taskRepository --> taskService: Task found
+taskService -> taskRepository: save(Task updated)
+taskRepository -> TodoList: UPDATE Task
+TodoList --> taskRepository: Task updated
+taskRepository --> taskService: Task updated
+destroy taskRepository
+taskService --> taskController: Task updated
+destroy taskService
+taskController --> SpringBoot: ResponseEntity<Void> ResponseEntity.noContent()
+destroy taskController
+end
+SpringBoot --> Frontend: ResponseEntity<Void> ResponseEntity.noContent()
+Frontend --> Usuário: Status da Tarefa Atualizado
+deactivate Frontend
+deactivate Usuário
+
+== Excluir Tarefa ==
+Usuário -> Frontend: Excluir Tarefa
+activate Usuário
+activate Frontend
+Frontend -> SpringBoot: DELETE /task/{id}
+group to-do-list-lds [Spring Boot Java Application]
+SpringBoot -> taskController: delete(Long id)
+activate taskController
+taskController -> taskService: delete(Long id)
+activate taskService
+taskService -> taskRepository: findById(id)
+activate taskRepository
+taskRepository -> TodoList: SELECT * FROM Task WHERE id = id
+TodoList --> taskRepository: Task found
+taskRepository --> taskService: Task found
+taskService -> taskRepository: delete(Task)
+taskRepository -> TodoList: DELETE FROM Task WHERE id = id
+TodoList --> taskRepository: Task deleted
+taskRepository --> taskService: Task deleted
+destroy taskRepository
+taskService --> taskController: Task deleted
+destroy taskService
+taskController --> SpringBoot: ResponseEntity<Void> ResponseEntity.noContent()
+destroy taskController
+end
+SpringBoot --> Frontend: ResponseEntity<Void> ResponseEntity.noContent()
+Frontend --> Usuário: Tarefa Excluída
+deactivate Frontend
+deactivate Usuário
+@enduml
